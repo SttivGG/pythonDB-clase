@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Compilado bases de datos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <div class="mb-4">
+      <h1 class="h3 mb-1">Compilado de bases de datos</h1>
+      <p class="text-muted mb-0">Tabla unica combinada con datos de MySQL y MongoDB.</p>
+    </div>
+
+    <div class="card border-primary-subtle">
+      <div class="card-header bg-primary-subtle">
+        <h2 class="h5 mb-0">Tabla combinada MySQL + MongoDB</h2>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">ID producto (SQL)</th>
+                <th scope="col">Producto (SQL)</th>
+                <th scope="col">Marca (SQL)</th>
+                <th scope="col">Categoria (SQL)</th>
+                <th scope="col">Precio (SQL)</th>
+                <th scope="col">Mongo ID</th>
+                <th scope="col">Imagen</th>
+                <th scope="col">Descripcion (Mongo)</th>
+                <th scope="col">Fecha subida (Mongo)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for fila in filas_compiladas %}
+              <tr>
+                <td>{{ fila.idproducto }}</td>
+                <td>{{ fila.producto }}</td>
+                <td>{{ fila.marca if fila.marca else '-' }}</td>
+                <td>{{ fila.categoria if fila.categoria else 'Sin categoria' }}</td>
+                <td>{{ fila.precio if fila.precio else '-' }}</td>
+                <td>{{ fila.mongo_id if fila.mongo_id else '-' }}</td>
+                <td>
+                  {% if fila.url %}
+                  <img src="{{ fila.url }}" alt="Imagen de {{ fila.producto }}" style="width: 84px; height: 84px; object-fit: cover; border-radius: 8px; border: 1px solid #dee2e6;">
+                  {% else %}
+                  <span class="text-muted">Sin imagen</span>
+                  {% endif %}
+                </td>
+                <td>{{ fila.descripcion if fila.descripcion else '-' }}</td>
+                <td>{{ fila.fecha_subida.strftime('%Y-%m-%d %H:%M') if fila.fecha_subida else '-' }}</td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="9" class="text-center text-muted py-3">No hay datos para mostrar.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

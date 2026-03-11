@@ -1,0 +1,22 @@
+# Entornos virtuales
+env/
+env_old_broken_20260310/
+
+# Caché de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Variables de entorno
+.env
+
+# PDF generado
+promptsDBejercicio.pdf
+
+# VSCode
+.vscode/
+
+# Otros
+*.egg-info/
+dist/
+build/

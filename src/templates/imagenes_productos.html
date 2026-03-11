@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Imagenes de productos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">Imagenes de productos</h2>
+      <a href="/compilado_bd" class="btn btn-outline-dark">Ver compilado BD</a>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header">Crear imagen</div>
+      <div class="card-body">
+        <form action="/imagenes_productos/crear" method="post" class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label">Producto</label>
+            <select name="idproducto" class="form-select" required>
+              <option value="" selected disabled>Selecciona un producto</option>
+              {% for p in productos %}
+              <option value="{{ p.idproducto }}">{{ p.idproducto }} - {{ p.producto }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">URL</label>
+            <input type="url" name="url" class="form-control" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Descripcion</label>
+            <input type="text" name="descripcion" class="form-control" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Fecha subida</label>
+            <input type="datetime-local" name="fecha_subida" class="form-control">
+          </div>
+          <div class="col-md-12 d-grid">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Listado de imagenes</div>
+      <div class="table-responsive">
+        <table class="table table-striped mb-0 align-middle">
+          <thead>
+            <tr>
+              <th scope="col">Producto ID</th>
+              <th scope="col">Producto</th>
+              <th scope="col">URL</th>
+              <th scope="col">Descripcion</th>
+              <th scope="col">Fecha subida</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in data2 %}
+            <tr>
+              <form id="editar-imagen-{{ i.mongo_id }}" action="/imagenes_productos/editar/{{ i.mongo_id }}" method="post"></form>
+              <form id="eliminar-imagen-{{ i.mongo_id }}" action="/imagenes_productos/eliminar/{{ i.mongo_id }}" method="post"></form>
+              <th scope="row">{{ i.idproducto }}</th>
+              <td>
+                <div class="small text-muted mb-1">
+                  Actual: <span class="fw-semibold">{{ i.producto }}</span>
+                </div>
+                <select name="idproducto" class="form-select" form="editar-imagen-{{ i.mongo_id }}" required>
+                  {% for p in productos %}
+                  <option value="{{ p.idproducto }}" {% if i.idproducto == p.idproducto %}selected{% endif %}>{{ p.idproducto }} - {{ p.producto }}</option>
+                  {% endfor %}
+                </select>
+              </td>
+              <td><input type="url" name="url" value="{{ i.url }}" class="form-control" form="editar-imagen-{{ i.mongo_id }}" required></td>
+              <td><input type="text" name="descripcion" value="{{ i.descripcion }}" class="form-control" form="editar-imagen-{{ i.mongo_id }}" required></td>
+              <td>
+                <div class="small text-muted mb-1">
+                  Actual: {{ i.fecha_subida.strftime('%Y-%m-%d %H:%M') if i.fecha_subida else 'Sin fecha' }}
+                </div>
+                <input type="datetime-local" name="fecha_subida" value="{{ i.fecha_subida.strftime('%Y-%m-%dT%H:%M') if i.fecha_subida else '' }}" class="form-control" form="editar-imagen-{{ i.mongo_id }}">
+              </td>
+              <td class="text-nowrap">
+                <button type="submit" class="btn btn-sm btn-warning" form="editar-imagen-{{ i.mongo_id }}">Editar</button>
+                <button type="submit" class="btn btn-sm btn-danger" form="eliminar-imagen-{{ i.mongo_id }}" onclick="return confirm('Deseas eliminar esta imagen?');">Borrar</button>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="6" class="text-center text-muted py-3">No hay imagenes registradas.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
